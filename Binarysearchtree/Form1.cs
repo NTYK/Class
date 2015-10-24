@@ -24,7 +24,44 @@ namespace Binary_search_tree
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Function Tree = new Function();
+            string text = textBox1.Text;
+            int sucess = Tree.Check(ref text);
+            if (sucess == 0)
+            {
+                text = "X=" + text;
+                Tree.Create(text, 0);
+                Tree.Draw();
+            }
+            else if(sucess == 1)
+                MessageBox.Show("数式に関係のない文字が入っています。");
+            else
+                MessageBox.Show("'('と')'の数が合いません。");
+        }
 
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Function Tree = new Function();
+            string text = textBox2.Text;
+            if (Tree.Char_Check(ref text))
+            {
+                string str = "";
+                for (int i = 0; i < text.Length; i++)
+                {
+                    if (Char.IsDigit(text[i]))
+                        str += text[i].ToString();
+                    else if (str != "" && (text[i] == ',' || text[i] == ' '))
+                    {
+                        Tree.Insert(str);
+                        str = "";
+                    }
+                }
+                if (str != "")
+                    Tree.Insert(str);
+                Tree.Draw();
+            }
+            else
+                MessageBox.Show("データの中に関係のない文字が含まれています。");
         }
     }
 }
