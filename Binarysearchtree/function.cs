@@ -25,13 +25,28 @@ namespace Binary_search_tree
             public int left;
             public int right;
 
-            public static int radius;
-
             // コンストラクタ
             public Node(string value)
             {
-                this.button = new System.Windows.Forms.Button();
+                //値の設定
                 this.Value = value;
+
+                //コントロール(ノード)の設定
+                this.button = new System.Windows.Forms.Button();
+                this.button.Size = new Size(70, 70);
+                System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+                path.AddEllipse(new Rectangle(10, 10, radius, radius));
+                this.button.Region = new Region(path);
+                this.button.BackColor = Color.White;
+                this.button.Text = value;
+                this.button.Font = new Font("Arial", 15, FontStyle.Bold);
+                //円の描写
+                Bitmap canvas = new Bitmap(this.button.Width, this.button.Height);
+                Pen p = new Pen(Color.Black, 5);
+                Graphics g = Graphics.FromImage(canvas);
+                g.DrawEllipse(p, 10, 10, 50, 50);
+                g.Dispose();
+                this.button.Image = canvas;                
             }
         }
 
@@ -39,11 +54,18 @@ namespace Binary_search_tree
         private static Node root;
         //ノード数
         private static int node_count;
+        //ノード(円)の直径
+        public static int radius;
+        //ノードをつなぐ線の色・太さ
+        public static Pen pen = new Pen(Color.Black, 2);
+        //ノード間の距離(縦)
+        public static int space_y = 100;
 
         //コンストラクタ
         public Function()
         {
             node_count = 0;
+            radius = 50;
         }
 
         //このプログラムでは使用しない
@@ -464,9 +486,41 @@ namespace Binary_search_tree
             }
         }
 
-        public void Draw(Panel panel)
+        //右のpanelに二分木を作成
+        public void Draw(PictureBox pictureBox, Form form, Graphics g)
         {
+            int location_x = pictureBox.Width / 2 - root.button.Width / 2;
+            root.button.Location = new Point(location_x, 40);
+            pictureBox.Controls.Add(root.button);
+            if (root.Left != null)
+            {
+                Draw(pictureBox, root.Left, g, root.space_left * -1, location_x, 40);
+                g.DrawLine(pen, location_x + radius / 2 + 10, 40 + radius / 2 + 10, location_x + 50 * root.space_left * -1 + radius / 2 + 10, 40 + space_y + radius / 2 + 10);
+            }
+            if (root.Right != null)
+            {
+                Draw(pictureBox, root.Right, g, root.space_right, location_x, 40);
+                g.DrawLine(pen, location_x + radius / 2 + 10, 40 + radius / 2 + 10, location_x + 50 * root.space_right + radius / 2 + 10, 40 + space_y + radius / 2 + 10);
+            }
+        }
 
+        //右のpanelに二分木を作成
+        public static void Draw(PictureBox pictureBox, Node node, Graphics g, int space, int location_x, int location_y)
+        {
+            location_x += 50 * space;
+            location_y += space_y;
+            node.button.Location = new Point(location_x, location_y);
+            pictureBox.Controls.Add(node.button);
+            if (node.Left != null)
+            {
+                Draw(pictureBox, node.Left, g, node.space_left * -1, location_x, location_y);
+                g.DrawLine(pen, location_x + radius / 2 + 10, location_y + radius / 2 + 10, location_x + 50 * node.space_left * -1 + radius / 2 + 10, location_y + space_y + radius / 2 + 10);
+            }
+            if (node.Right != null)
+            {
+                Draw(pictureBox, node.Right, g, node.space_right, location_x, location_y);
+                g.DrawLine(pen, location_x + radius / 2 + 10, location_y + radius / 2 + 10, location_x + 50 * node.space_right + radius / 2 + 10, location_y + space_y + radius / 2 + 10);
+            }
         }
     }
 }

@@ -27,11 +27,15 @@ namespace Binary_search_tree
             Function Tree = new Function();
             string text = textBox1.Text;
             int sucess = Tree.Check(ref text);
+            Bitmap canvas = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            Graphics g = Graphics.FromImage(canvas);
             if (sucess == 0)
             {
                 text = "X=" + text;
                 Tree.Create(text, 0);
-                Tree.Draw(panel4);
+                Tree.Draw(pictureBox1, this, g);
+                g.Dispose();
+                pictureBox1.Image = canvas;
             }
             else if(sucess == 1)
                 MessageBox.Show("数式に関係のない文字が入っています。");
@@ -43,6 +47,8 @@ namespace Binary_search_tree
         {
             Function Tree = new Function();
             string text = textBox2.Text;
+            Bitmap canvas = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            Graphics g = Graphics.FromImage(canvas);
             if (Tree.Char_Check(ref text))
             {
                 string str = "";
@@ -59,7 +65,10 @@ namespace Binary_search_tree
                 if (str != "")
                     Tree.Insert(str);
                 Tree.add_info();
-                Tree.Draw(panel4);
+                Tree.Draw(pictureBox1, this, g);
+                g.Dispose();
+                pictureBox1.Image = canvas;
+                
             }
             else
                 MessageBox.Show("データの中に関係のない文字が含まれています。");
