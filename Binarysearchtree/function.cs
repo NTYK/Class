@@ -18,14 +18,33 @@ namespace Binary_search_tree
             public string Value;
             public Node Left;
             public Node Right;
+
+            public Button button;
+            public int space_left;
+            public int space_right;
+            public int left;
+            public int right;
+
+            public static int radius;
+
             // コンストラクタ
             public Node(string value)
             {
+                this.button = new System.Windows.Forms.Button();
                 this.Value = value;
             }
         }
 
+        //ルート
         private static Node root;
+        //ノード数
+        private static int node_count;
+
+        //コンストラクタ
+        public Function()
+        {
+            node_count = 0;
+        }
 
         //このプログラムでは使用しない
         private static int rank(char sign)
@@ -134,13 +153,34 @@ namespace Binary_search_tree
                         stack.Pop();
                     else{
                         //符号の場合
-                        //ルートが存在しない場合ルートを作成
-                        if (root == null)
-                            root = new Node(text[i].ToString());
+                        //ルートを作成
+                        root = new Node(text[i].ToString());
+                        //ノード数をインクリメント
+                        node_count++;
                         //左の子へ
                         Create(root, text, left, i, true);
+
+                        if (root.Left.space_right < root.Left.right)
+                            root.space_left = root.Left.right + 1;
+                        else
+                            root.space_left = root.Left.space_right + 1;
+                        if (root.Left.left < root.Left.right)
+                            root.left = root.Left.right + 1;
+                        else
+                            root.left = root.Left.left + 1;
+
                         //右の子へ
                         Create(root, text, i+1, text.Length, false);
+
+                        if (root.Right.space_left < root.Left.left)
+                            root.space_right = root.Right.left + 1;
+                        else
+                            root.space_right = root.Right.space_left + 1;
+                        if (root.Right.left < root.Right.right)
+                            root.right = root.Right.right + 1;
+                        else
+                            root.right = root.Right.left + 1;
+
                         return;
                     }
                 }
@@ -166,14 +206,34 @@ namespace Binary_search_tree
                         //符号の場合
                         //新しいノードの作成
                         Node n = new Node(text[i].ToString());
+                        //ノード数をインクリメント
+                        node_count++;
                         if (add)
                         {
                             node.Left = n;
                             //再帰呼び出し
                             //左の子へ
                             Create(node.Left, text, left, i, true);
+
+                            if (node.Left.Left.space_right < node.Left.Left.right)
+                                node.Left.space_left = node.Left.Left.right + 1;
+                            else
+                                node.Left.space_left = node.Left.Left.space_right + 1;
+                            if (node.Left.Left.left < node.Left.Left.right)
+                                node.Left.left = node.Left.Left.right + 1;
+                            else
+                                node.Left.left = node.Left.Left.left + 1;
                             //右の子へ
                             Create(node.Left, text, i + 1, text.Length, false);
+
+                            if (node.Left.Right.space_left < node.Right.Left.left)
+                                node.Left.space_right = node.Left.Right.left + 1;
+                            else
+                                node.Left.space_right = node.Left.Right.space_left + 1;
+                            if (node.Left.Right.left < node.Left.Right.right)
+                                node.Left.right = node.Left.Right.right + 1;
+                            else
+                                node.Left.right = node.Left.Right.left + 1;
                         }
                         else
                         {
@@ -181,8 +241,27 @@ namespace Binary_search_tree
                             //再帰呼び出し
                             //左の子へ
                             Create(node.Right, text, left, i, true);
+
+                            if (node.Right.Left.space_right < node.Right.Left.right)
+                                node.Right.space_left = node.Right.Left.right + 1;
+                            else
+                                node.Right.space_left = node.Right.Left.space_right + 1;
+                            if (node.Right.Left.left < node.Right.Left.right)
+                                node.Right.left = node.Right.Left.right + 1;
+                            else
+                                node.Right.left = node.Right.Left.left + 1;
+
                             //右の子へ
                             Create(node.Right, text, i + 1, text.Length, false);
+
+                            if (node.Right.Right.space_left < node.Right.Right.left)
+                                node.Right.space_right = node.Right.Right.left + 1;
+                            else
+                                node.Right.space_right = node.Right.Right.space_left + 1;
+                            if (node.Right.Right.left < node.Right.Right.right)
+                                node.Right.right = node.Right.Right.right + 1;
+                            else
+                                node.Right.right = node.Right.Right.left + 1;
                         }
                         return;
                     }
@@ -198,7 +277,14 @@ namespace Binary_search_tree
                 }
                 else if (str != "")
                 {
+                    //新しいノードの作成
                     Node n = new Node(str);
+                    n.left = 0;
+                    n.right = 0;
+                    n.space_left = 0;
+                    n.space_right = 0;
+                    //ノード数をインクリメント
+                    node_count++;
                     if (add)
                         node.Left = n;
                     else
@@ -208,7 +294,14 @@ namespace Binary_search_tree
             }
             if (str != "")
             {
+                //新しいノードの作成
                 Node n = new Node(str);
+                n.left = 0;
+                n.right = 0;
+                n.space_left = 0;
+                n.space_right = 0;
+                //ノード数をインクリメント
+                node_count++;
                 if (add)
                     node.Left = n;
                 else
@@ -246,7 +339,11 @@ namespace Binary_search_tree
         {
             //ルートが存在しない場合ルートを作成
             if (root == null)
+            {
                 root = new Node(value);
+                //ノード数をインクリメント
+                node_count++;
+            }
             else
                 Insert(root, value);
         }
@@ -262,6 +359,8 @@ namespace Binary_search_tree
                 {
                     Node n = new Node(value.ToString());
                     node.Left = n;
+                    //ノード数をインクリメント
+                    node_count++;
                 }
                 //再帰呼び出し
                 else
@@ -278,6 +377,8 @@ namespace Binary_search_tree
                     Node n = new Node(value);
                     n.Right = node.Right;
                     node.Right = n;
+                    //ノード数をインクリメント
+                    node_count++;
                 }
                 //再帰呼び出し
                 else
@@ -288,9 +389,84 @@ namespace Binary_search_tree
             }
         }
 
-        public void Draw()
+        //データ群関数　ルートに位置・間隔情報を付加
+        public void add_info()
         {
-            MessageBox.Show(root.Value.ToString());
+            //ルートが左の子を持っている場合
+            if (root.Left != null)
+            {
+                add_info(root.Left);
+
+                if (root.Left.space_right < root.Left.right)
+                    root.space_left = root.Left.right + 1;
+                else
+                    root.space_left = root.Left.space_right + 1;
+                if (root.Left.left < root.Left.right)
+                    root.left = root.Left.right + 1;
+                else
+                    root.left = root.Left.left + 1;
+            }
+            //ルートが左の子を持っている場合
+            if (root.Right != null)
+            {
+                add_info(root.Right);
+
+                if (root.Right.space_left < root.Left.left)
+                    root.space_right = root.Right.left + 1;
+                else
+                    root.space_right = root.Right.space_left + 1;
+                if (root.Right.left < root.Right.right)
+                    root.right = root.Right.right + 1;
+                else
+                    root.right = root.Right.left + 1;
+            }
+        }
+
+        //データ群関数　ルート以外の各ノードに位置・間隔情報を付加
+        private static void add_info(Node node)
+        {
+            //今見ているノードが左の子を持っている場合
+            if (node.Left != null)
+            {
+                add_info(node.Left);
+
+                if (node.Left.space_right < node.Left.right)
+                    node.space_left = node.Left.right + 1;
+                else
+                    node.space_left = node.Left.space_right + 1;
+                if (node.Left.left < node.Left.right)
+                    node.left = node.Left.right + 1;
+                else
+                    node.left = node.Left.left + 1;
+            }
+
+            //今見ているノードが右の子を持っている場合
+            if (node.Right != null)
+            {
+                add_info(node.Right);
+
+                if (node.Right.space_left < node.Right.left)
+                    node.space_right = node.Right.left + 1;
+                else
+                    node.space_right = node.Right.space_left + 1;
+                if (node.Right.left < node.Right.right)
+                    node.right = node.Right.right + 1;
+                else
+                    node.right = node.Right.left + 1;
+            }
+            //子を持たないノードの場合
+            if (node.Left == null && node.Right == null)
+            {
+                node.left = 0;
+                node.right = 0;
+                node.space_left = 0;
+                node.space_right = 0;
+            }
+        }
+
+        public void Draw(Panel panel)
+        {
+
         }
     }
 }

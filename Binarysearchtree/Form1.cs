@@ -31,7 +31,7 @@ namespace Binary_search_tree
             {
                 text = "X=" + text;
                 Tree.Create(text, 0);
-                Tree.Draw();
+                Tree.Draw(panel4);
             }
             else if(sucess == 1)
                 MessageBox.Show("数式に関係のない文字が入っています。");
@@ -58,7 +58,8 @@ namespace Binary_search_tree
                 }
                 if (str != "")
                     Tree.Insert(str);
-                Tree.Draw();
+                Tree.add_info();
+                Tree.Draw(panel4);
             }
             else
                 MessageBox.Show("データの中に関係のない文字が含まれています。");
