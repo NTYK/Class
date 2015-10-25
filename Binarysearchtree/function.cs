@@ -7,17 +7,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace Binary_search_tree
 {
-    public class Function
+    public class Function : IDisposable 
     {
+
+        struct informaiton
+        {
+            string parent;
+            string child;
+            List <string> sibling;
+        }
+
         // 二分探索木のノード
         public class Node
         {
             public string Value;
             public Node Left;
             public Node Right;
+            public informaiton info;
 
             public Button button;
             public int space_left;
@@ -48,18 +58,46 @@ namespace Binary_search_tree
                 g.Dispose();
                 this.button.Image = canvas;                
             }
+
+            //ノードがクリックされた時
+            public void button_Click(object sender, EventArgs e)
+            {
+
+            }
+        }
+
+        //インスタンスの破棄
+        public void Dispose()
+        {
+            if (root.Left != null)
+                Dispose(root.Left);
+            if (root.Right != null)
+                Dispose(root.Right);
+            root.button.Visible = false;
+            root = null;
+        }
+
+        //インスタンスの破棄
+        public void Dispose(Node node)
+        {
+            if (node.Left != null)
+                Dispose(node.Left);
+            if (node.Right != null)
+                Dispose(node.Right);
+            node.button.Visible = false;
+            node = null;
         }
 
         //ルート
-        private static Node root;
+        private Node root;
         //ノード数
-        private static int node_count;
+        private int node_count;
+        //ノードをつなぐ線の色・太さ
+        private static Pen pen = new Pen(Color.Black, 2);
+        //ノード間の距離(縦)
+        private static int space_y = 100;
         //ノード(円)の直径
         public static int radius;
-        //ノードをつなぐ線の色・太さ
-        public static Pen pen = new Pen(Color.Black, 2);
-        //ノード間の距離(縦)
-        public static int space_y = 100;
 
         //コンストラクタ
         public Function()
@@ -177,6 +215,8 @@ namespace Binary_search_tree
                         //符号の場合
                         //ルートを作成
                         root = new Node(text[i].ToString());
+                        //Clickイベントハンドラを追加する
+                        root.button.Click += new EventHandler(root.button_Click);
                         //ノード数をインクリメント
                         node_count++;
                         //左の子へ
@@ -209,7 +249,7 @@ namespace Binary_search_tree
         }
 
         //特定のノードから指定した値を持つノードを追加
-        public static void Create(Node node, string text, int left, int right, bool add)
+        public void Create(Node node, string text, int left, int right, bool add)
         {
             //スタックを用いることで'('と')'の間の式をまとめる
             Stack<char> stack = new Stack<char>();
@@ -228,6 +268,7 @@ namespace Binary_search_tree
                         //符号の場合
                         //新しいノードの作成
                         Node n = new Node(text[i].ToString());
+                        n.button.Click += new EventHandler(n.button_Click);
                         //ノード数をインクリメント
                         node_count++;
                         if (add)
@@ -301,6 +342,7 @@ namespace Binary_search_tree
                 {
                     //新しいノードの作成
                     Node n = new Node(str);
+                    n.button.Click += new EventHandler(n.button_Click);
                     n.left = 0;
                     n.right = 0;
                     n.space_left = 0;
@@ -318,6 +360,7 @@ namespace Binary_search_tree
             {
                 //新しいノードの作成
                 Node n = new Node(str);
+                n.button.Click += new EventHandler(n.button_Click);
                 n.left = 0;
                 n.right = 0;
                 n.space_left = 0;
@@ -363,6 +406,7 @@ namespace Binary_search_tree
             if (root == null)
             {
                 root = new Node(value);
+                root.button.Click += new EventHandler(root.button_Click);
                 //ノード数をインクリメント
                 node_count++;
             }
@@ -371,7 +415,7 @@ namespace Binary_search_tree
         }
 
         //特定のノードから指定した値を持つノードを追加
-        private static void Insert(Node node, string value)
+        private void Insert(Node node, string value)
         {
             //追加する値がノードの値よりも小さい場合
             if (int.Parse(value) < int.Parse(node.Value))
@@ -380,6 +424,7 @@ namespace Binary_search_tree
                 if (node.Left == null)
                 {
                     Node n = new Node(value.ToString());
+                    n.button.Click += new EventHandler(n.button_Click);
                     node.Left = n;
                     //ノード数をインクリメント
                     node_count++;
@@ -397,6 +442,7 @@ namespace Binary_search_tree
                 if (node.Right == null)
                 {
                     Node n = new Node(value);
+                    n.button.Click += new EventHandler(n.button_Click);
                     n.Right = node.Right;
                     node.Right = n;
                     //ノード数をインクリメント
@@ -522,5 +568,6 @@ namespace Binary_search_tree
                 g.DrawLine(pen, location_x + radius / 2 + 10, location_y + radius / 2 + 10, location_x + 50 * node.space_right + radius / 2 + 10, location_y + space_y + radius / 2 + 10);
             }
         }
+
     }
 }

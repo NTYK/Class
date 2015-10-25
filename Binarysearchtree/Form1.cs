@@ -19,18 +19,28 @@ namespace Binary_search_tree
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
+
+        private Function Tree;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Function Tree = new Function();
+            Function Buf = new Function();
             string text = textBox1.Text;
-            int sucess = Tree.Check(ref text);
-            Bitmap canvas = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            Graphics g = Graphics.FromImage(canvas);
+            int sucess = Buf.Check(ref text);
             if (sucess == 0)
             {
+                Bitmap canvas = new Bitmap(pictureBox1.Width + Function.radius * textBox2.Text.Length, pictureBox1.Height);
+                Graphics g = Graphics.FromImage(canvas);
+
+                if (Tree != null)
+                {
+                    Tree.Dispose();
+                    Tree = null;
+                    pictureBox1.Image = canvas;
+                }
+                Tree = Buf;
+
                 text = "X=" + text;
                 Tree.Create(text, 0);
                 Tree.Draw(pictureBox1, this, g);
@@ -45,12 +55,21 @@ namespace Binary_search_tree
 
         private void button6_Click(object sender, EventArgs e)
         {
-            Function Tree = new Function();
+            Function Buf = new Function();
             string text = textBox2.Text;
-            Bitmap canvas = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            Graphics g = Graphics.FromImage(canvas);
-            if (Tree.Char_Check(ref text))
+            if (Buf.Char_Check(ref text))
             {
+                Bitmap canvas = new Bitmap(pictureBox1.Width + Function.radius * textBox2.Text.Length, pictureBox1.Height);
+                Graphics g = Graphics.FromImage(canvas);
+
+                if (Tree != null)
+                {
+                    Tree.Dispose();
+                    Tree = null;
+                    pictureBox1.Image = canvas;
+                }
+                Tree = Buf;
+
                 string str = "";
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -72,6 +91,28 @@ namespace Binary_search_tree
             }
             else
                 MessageBox.Show("データの中に関係のない文字が含まれています。");
+        }
+        
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (Tree != null)
+            {
+                DialogResult result = MessageBox.Show("表示中の2分木を閉じることになります。タブを切り替えますか？",
+                                                        "確認",
+                                                        MessageBoxButtons.YesNo,
+                                                        MessageBoxIcon.Exclamation,
+                                                        MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    Bitmap canvas = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                    Graphics g = Graphics.FromImage(canvas);
+                    Tree.Dispose();
+                    Tree = null;
+                    pictureBox1.Image = canvas;
+                }
+                else
+                    e.Cancel = true;
+            }
         }
     }
 }

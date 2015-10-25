@@ -160,6 +160,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(357, 245);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
             // tabPage1
             // 
@@ -326,7 +327,7 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("MS UI Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2.Location = new System.Drawing.Point(5, 6);
+            this.textBox2.Location = new System.Drawing.Point(5, 5);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(328, 31);
             this.textBox2.TabIndex = 2;
