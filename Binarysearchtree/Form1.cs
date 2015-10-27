@@ -25,7 +25,9 @@ namespace Binary_search_tree
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Function Buf = new Function();
+            if (textBox1.Text == "")
+                return;
+            Function Buf = new Function(this);
             string text = textBox1.Text;
             int sucess = Buf.Check(ref text);
             if (sucess == 0)
@@ -55,7 +57,9 @@ namespace Binary_search_tree
 
         private void button6_Click(object sender, EventArgs e)
         {
-            Function Buf = new Function();
+            if (textBox2.Text == "")
+                return;
+            Function Buf = new Function(this);
             string text = textBox2.Text;
             if (Buf.Char_Check(ref text))
             {
@@ -109,10 +113,43 @@ namespace Binary_search_tree
                     Tree.Dispose();
                     Tree = null;
                     pictureBox1.Image = canvas;
+                    label4.Text = "";
                 }
                 else
                     e.Cancel = true;
             }
+        }
+
+        //preorder
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string str = "";
+            Tree.Preorder(ref str);
+            label4.Text = str;
+        }
+
+        //postorder
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string str = "";
+            Tree.Postorder(ref str);
+            label4.Text = str;
+        }
+
+        //inorder
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string str = "";
+            Tree.Inorder(ref str);
+            label4.Text = str;
+        }
+
+        //level order
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string str = "";
+            Tree.Levelorder(ref str);
+            label4.Text = str;
         }
     }
 }

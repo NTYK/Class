@@ -13,21 +13,12 @@ namespace Binary_search_tree
 {
     public class Function : IDisposable 
     {
-
-        struct informaiton
-        {
-            string parent;
-            string child;
-            List <string> sibling;
-        }
-
         // 二分探索木のノード
         public class Node
         {
             public string Value;
             public Node Left;
             public Node Right;
-            public informaiton info;
 
             public Button button;
             public int space_left;
@@ -62,7 +53,11 @@ namespace Binary_search_tree
             //ノードがクリックされた時
             public void button_Click(object sender, EventArgs e)
             {
-
+                Function.Parent(this.Value);
+                Function.Root();
+                Function.Child(this.Value);
+                Function.Sibling();
+                this.button.BackColor = Color.Aqua;
             }
         }
 
@@ -90,6 +85,7 @@ namespace Binary_search_tree
 
         //ルート
         private Node root;
+        private static Node s_root;
         //ノード数
         private int node_count;
         //ノードをつなぐ線の色・太さ
@@ -98,10 +94,15 @@ namespace Binary_search_tree
         private static int space_y = 100;
         //ノード(円)の直径
         public static int radius;
+        //同じ世代？のノード
+        private List<string> sibling = new List<string>();
+
+        private static Form1 form;
 
         //コンストラクタ
-        public Function()
+        public Function(Form1 f)
         {
+            form = f;
             node_count = 0;
             radius = 50;
         }
@@ -219,6 +220,7 @@ namespace Binary_search_tree
                         root.button.Click += new EventHandler(root.button_Click);
                         //ノード数をインクリメント
                         node_count++;
+                        s_root = root;
                         //左の子へ
                         Create(root, text, left, i, true);
 
@@ -409,6 +411,7 @@ namespace Binary_search_tree
                 root.button.Click += new EventHandler(root.button_Click);
                 //ノード数をインクリメント
                 node_count++;
+                s_root = root;
             }
             else
                 Insert(root, value);
@@ -569,5 +572,207 @@ namespace Binary_search_tree
             }
         }
 
+        //preorder
+        public void Preorder(ref string str)
+        {
+            if (root != null)
+            {
+                str += root.Value;
+                if (root.Left != null)
+                    Preorder(ref str, root.Left);
+                if (root.Right != null)
+                    Preorder(ref str, root.Right);
+            }
+        }
+
+        private static void Preorder(ref string str, Node node)
+        {
+            str += ", " + node.Value;
+            if (node.Left != null)
+                Preorder(ref str, node.Left);
+            if (node.Right != null)
+                Preorder(ref str, node.Right);
+        }
+
+        //postorder
+        public void Postorder(ref string str)
+        {
+            if (root != null)
+            {
+                if (root.Left != null)
+                    Postorder(ref str, root.Left);
+                if (root.Right != null)
+                    Postorder(ref str, root.Right);
+                if (str == "")
+                    str += root.Value;
+                else
+                    str += ", " + root.Value;
+            }
+        }
+
+        private static void Postorder(ref string str, Node node)
+        {
+            if (node.Left != null)
+                Postorder(ref str, node.Left);
+            if (node.Right != null)
+                Postorder(ref str, node.Right);
+            if (str == "")
+                str += node.Value;
+            else
+                str += ", " + node.Value;
+        }
+
+        //inorder
+        public void Inorder(ref string str)
+        {
+            if (root != null)
+            {
+                if (root.Left != null)
+                    Inorder(ref str, root.Left);
+                if (str == "")
+                    str += root.Value;
+                else
+                    str += ", " + root.Value;
+                if (root.Right != null)
+                    Inorder(ref str, root.Right);
+            }
+        }
+
+        private static void Inorder(ref string str, Node node)
+        {
+            if (node.Left != null)
+                Inorder(ref str, node.Left);
+            if (str == "")
+                str += node.Value;
+            else
+                str += ", " + node.Value;
+            if (node.Right != null)
+                Inorder(ref str, node.Right);
+        }
+
+        //levelorder
+        public void Levelorder(ref string str)
+        {
+        }
+
+        private static void Levelorder(ref string str, Node node)
+        {
+        }
+
+        //親
+        private static void Parent(string value)
+        {
+            string str = "";
+            Parent_find(ref str, value);
+            form.label11.Text = str;
+        }
+
+        //根
+        private static void Root()
+        {
+            form.label12.Text = s_root.Value;
+        }
+
+        //子
+        private static void Child(string value)
+        {
+            string str = "";
+            Child_find(ref str, value);
+            form.label13.Text = str;
+        }
+
+        //兄弟
+        private static void Sibling()
+        {
+
+        }
+
+        //親を見つける
+        private static void Parent_find(ref string str, string value)
+        {
+            if (s_root.Value == value)
+                return;
+            if (int.Parse(value) < int.Parse(s_root.Value))
+            {
+                if (s_root.Left.Value == value)
+                {
+                    str = s_root.Value;
+                    return;
+                }
+                Parent_find(ref str, value, s_root.Left);
+            }
+            else
+            {
+                if (s_root.Right.Value == value)
+                {
+                    str = s_root.Value;
+                    return;
+                }
+                Parent_find(ref str, value, s_root.Right);
+            }
+        }
+
+        private static void Parent_find(ref string str, string value, Node node)
+        {
+            if (node.Value == value)
+                return;
+            if (int.Parse(value) < int.Parse(node.Value))
+            {
+                if (node.Left.Value == value)
+                {
+                    str = node.Value;
+                    return;
+                }
+                Parent_find(ref str, value, node.Left);
+            }
+            else
+            {
+                if (node.Right.Value == value)
+                {
+                    str = node.Value;
+                    return;
+                }
+                Parent_find(ref str, value, node.Right);
+            }
+        }
+
+        //子を見つける
+        private static void Child_find(ref string str, string value)
+        {
+            if (s_root.Value == value)
+            {
+                if (s_root.Left != null)
+                    str += s_root.Left.Value;
+                if (s_root.Right != null)
+                    if(str == "")
+                      str += s_root.Right.Value;
+                    else
+                        str += ", " + s_root.Right.Value;
+                return;
+            }
+            if (int.Parse(value) < int.Parse(s_root.Value))
+                Child_find(ref str, value, s_root.Left);
+            else
+                Child_find(ref str, value, s_root.Right);
+        }
+
+        private static void Child_find(ref string str, string value, Node node)
+        {
+            if (node.Value == value)
+            {
+                if (node.Left != null)
+                    str += node.Left.Value;
+                if (node.Right != null)
+                    if(str == "")
+                        str += node.Right.Value;
+                    else
+                        str += ", " + node.Right.Value;
+                return;
+            }
+            if (int.Parse(value) < int.Parse(node.Value))
+                Child_find(ref str, value, node.Left);
+            else
+                Child_find(ref str, value, node.Right);
+        }
     }
 }
