@@ -1001,5 +1001,36 @@ namespace Binary_search_tree
                     s_sibling.Add(node.Right);
             }
         }
+
+        //高さ
+        public void height()
+        {
+            int l_count = 0;
+            int r_count = 0;
+            if (root.Left != null)
+                l_count = height(root.Left, 2);
+            if (root.Right != null)
+                r_count = height(root.Right, 2);
+            if(l_count < r_count)
+                form.label18.Text = "Height:" + r_count.ToString();
+            else
+                form.label18.Text = "Height:" + l_count.ToString();
+        }
+
+        private int height(Node node, int count)
+        {
+            int l_count = 0;
+            int r_count = 0;
+            if (node.Left == null && node.Right == null)
+                return count;
+            if (node.Left != null)
+                l_count = height(node.Left, count + 1);
+            if (node.Right != null)
+                r_count = height(node.Right, count + 1);
+            if (l_count < r_count)
+                return r_count;
+            else
+                return l_count;
+        }
     }
 }

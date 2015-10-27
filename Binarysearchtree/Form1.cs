@@ -55,6 +55,7 @@ namespace Binary_search_tree
                 Tree.Draw(pictureBox1, this, g);
                 g.Dispose();
                 pictureBox1.Image = canvas;
+                Tree.height();
             }
             else if (sucess == 1)
                 MessageBox.Show("数式に関係のない文字が入っています。",
@@ -111,6 +112,7 @@ namespace Binary_search_tree
                 g.Dispose();
                 pictureBox1.Image = canvas;
                 open = true;
+                Tree.height();
             }
             else
                 MessageBox.Show("データの中に関係のない文字が含まれています。",
@@ -231,6 +233,7 @@ namespace Binary_search_tree
                     Tree.Draw(pictureBox1, this, g);
                     g.Dispose();
                     pictureBox1.Image = canvas;
+                    Tree.height();
                 }
             }
         }
