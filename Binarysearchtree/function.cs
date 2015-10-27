@@ -53,6 +53,7 @@ namespace Binary_search_tree
             //ノードがクリックされた時
             public void button_Click(object sender, EventArgs e)
             {
+                Function.Button();
                 Function.Parent(this.Value);
                 Function.Root();
                 Function.Child(this.Value);
@@ -165,6 +166,25 @@ namespace Binary_search_tree
             MessageBox.Show(buffer);
 
             return true;
+        }
+
+        //ボタンの色を初期化
+        public static void Button()
+        {
+            s_root.button.BackColor = Color.White;
+            if (s_root.Left != null)
+                Button(s_root.Left);
+            if (s_root.Right != null)
+                Button(s_root.Right);
+        }
+
+        public static void Button(Node node)
+        {
+            node.button.BackColor = Color.White;
+            if (node.Left != null)
+                Button(node.Left);
+            if (node.Right != null)
+                Button(node.Right);
         }
 
         //数式が正しいか確認
@@ -427,7 +447,7 @@ namespace Binary_search_tree
                 //左の子が存在しない場合は挿入
                 if (node.Left == null)
                 {
-                    Node n = new Node(value.ToString());
+                    Node n = new Node(value);
                     n.button.Click += new EventHandler(n.button_Click);
                     node.Left = n;
                     //ノード数をインクリメント
@@ -536,12 +556,126 @@ namespace Binary_search_tree
             }
         }
 
+        //ノードを削除
+        public bool Delete(string value)
+        {
+            Node parent;
+            bool success = true;
+            if (root.Value != value)
+            {
+                parent = root;
+                if (int.Parse(value) < int.Parse(root.Value))
+                {
+                    success = Delete(value, root.Left, parent, true);
+                }
+                else
+                {
+                    success = Delete(value, root.Right, parent, false);
+                }
+            }
+            else
+            {
+                Node bignode = root.Left;
+                bool flag = true;
+                parent = root;
+                max_find(ref bignode, ref parent, ref flag);
+                root.Value = bignode.Value;
+                if (flag)
+                    parent.Left = bignode.Left;
+                else
+                    parent.Right = bignode.Left;
+            }
+            return success;
+        }
+        
+        private bool Delete(string value, Node node, Node parent, bool flag)
+        {
+            if (node == null)
+                return false;
+            if (node.Value != value)
+            {
+                if (int.Parse(value) < int.Parse(node.Value))
+                {
+                    return Delete(value, node.Left, node, true);
+                }
+                else
+                {
+                    return Delete(value, node.Right, node, false);
+                }
+            }
+            else
+            {
+                if (node.Left == null || node.Right == null)
+                {
+                    if (node.Left == null)
+                    {
+                        if (flag)
+                            parent.Left = node.Right;
+                        else
+                            parent.Right= node.Right;
+                    }
+                    else
+                    if (node.Right == null)
+                    {
+                        if (flag)
+                            parent.Left = node.Left;
+                        else
+                            parent.Right = node.Left;
+                    }
+                }
+                else
+                {
+                    Node bignode = node.Left;
+                    flag = true;
+                    parent = node;
+                    max_find(ref bignode, ref parent, ref flag);
+                    node.Value = bignode.Value;
+                    if (flag)
+                        parent.Left = bignode.Left;
+                    else
+                        parent.Right = bignode.Left;
+                }
+            }
+            return true;
+        }
+
+        private void max_find(ref Node bignode, ref Node parent, ref bool flag)
+        {
+            if (bignode.Right != null)
+            {
+                flag = false;
+                parent = bignode;
+                bignode = bignode.Right;
+                max_find(ref bignode, ref parent, ref flag);
+            }
+        }
+
+        public void Unshow()
+        {
+            if(root.Left != null)
+                Unshow(root.Left);
+            if(root.Right != null)
+                Unshow(root.Right);
+            root.button.Visible = false;
+        }
+
+        private static void Unshow(Node node)
+        {
+            if (node.Left != null)
+                Unshow(node.Left);
+            if (node.Right != null)
+                Unshow(node.Right);
+            node.button.Visible = false;
+        }
+
         //右のpanelに二分木を作成
         public void Draw(PictureBox pictureBox, Form form, Graphics g)
         {
             int location_x = pictureBox.Width / 2 - root.button.Width / 2;
             root.button.Location = new Point(location_x, 40);
+            root.button.Text = root.Value;
             pictureBox.Controls.Add(root.button);
+            root.button.Visible = true;
             if (root.Left != null)
             {
                 Draw(pictureBox, root.Left, g, root.space_left * -1, location_x, 40);
@@ -560,7 +694,9 @@ namespace Binary_search_tree
             location_x += 50 * space;
             location_y += space_y;
             node.button.Location = new Point(location_x, location_y);
+            node.button.Text = node.Value;
             pictureBox.Controls.Add(node.button);
+            node.button.Visible = true;
             if (node.Left != null)
             {
                 Draw(pictureBox, node.Left, g, node.space_left * -1, location_x, location_y);

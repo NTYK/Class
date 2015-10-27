@@ -138,6 +138,7 @@
             // 
             this.label4.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label4.Location = new System.Drawing.Point(21, 94);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(319, 75);
@@ -253,7 +254,6 @@
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(149, 29);
             this.label17.TabIndex = 9;
-            this.label17.Text = "Not find";
             // 
             // button7
             // 
@@ -264,13 +264,15 @@
             this.button7.TabIndex = 8;
             this.button7.Text = "Update";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
+            this.radioButton2.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
             this.radioButton2.Location = new System.Drawing.Point(246, 108);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(54, 16);
+            this.radioButton2.Size = new System.Drawing.Size(64, 22);
             this.radioButton2.TabIndex = 7;
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "delete";
@@ -279,9 +281,10 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
+            this.radioButton1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
             this.radioButton1.Location = new System.Drawing.Point(151, 109);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(41, 16);
+            this.radioButton1.Size = new System.Drawing.Size(50, 22);
             this.radioButton1.TabIndex = 6;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "add";
@@ -289,6 +292,7 @@
             // 
             // textBox3
             // 
+            this.textBox3.Font = new System.Drawing.Font("MS UI Gothic", 18F, System.Drawing.FontStyle.Bold);
             this.textBox3.Location = new System.Drawing.Point(6, 131);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
@@ -371,7 +375,6 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(78, 20);
             this.label14.TabIndex = 7;
-            this.label14.Text = "label14";
             // 
             // label13
             // 
@@ -381,7 +384,6 @@
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(78, 20);
             this.label13.TabIndex = 6;
-            this.label13.Text = "label13";
             // 
             // label12
             // 
@@ -389,9 +391,9 @@
             this.label12.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold);
             this.label12.Location = new System.Drawing.Point(257, 9);
             this.label12.Name = "label12";
+            this.label12.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label12.Size = new System.Drawing.Size(78, 20);
             this.label12.TabIndex = 5;
-            this.label12.Text = "label12";
             // 
             // label11
             // 
@@ -401,7 +403,6 @@
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(78, 20);
             this.label11.TabIndex = 4;
-            this.label11.Text = "あああああああ";
             // 
             // label10
             // 
