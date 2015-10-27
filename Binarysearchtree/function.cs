@@ -56,7 +56,7 @@ namespace Binary_search_tree
                 Function.Parent(this.Value);
                 Function.Root();
                 Function.Child(this.Value);
-                Function.Sibling();
+                Function.Sibling(this.Value);
                 this.button.BackColor = Color.Aqua;
             }
         }
@@ -95,7 +95,8 @@ namespace Binary_search_tree
         //ノード(円)の直径
         public static int radius;
         //同じ世代？のノード
-        private List<string> sibling = new List<string>();
+        private List<Node> sibling = new List<Node>();
+        private static List<Node> s_sibling = new List<Node>();
 
         private static Form1 form;
 
@@ -653,10 +654,32 @@ namespace Binary_search_tree
         //levelorder
         public void Levelorder(ref string str)
         {
+            if (root != null)
+            {
+                str += root.Value;
+                if (root.Left != null)
+                    sibling.Add(root.Left);
+                if (root.Right != null)
+                    sibling.Add(root.Right);
+                while(sibling.Count != 0)
+                {
+                    List<Node> Buf = new List<Node>(sibling);
+                    sibling.Clear();
+                    for (int i = 0; i < Buf.Count; i++)
+                    {
+                        Levelorder(ref str, Buf[i]);
+                    }
+                }
+            }
         }
 
-        private static void Levelorder(ref string str, Node node)
+        private void Levelorder(ref string str, Node node)
         {
+            str += ", " + node.Value;
+            if (node.Left != null)
+                sibling.Add(node.Left);
+            if (node.Right != null)
+                sibling.Add(node.Right);
         }
 
         //親
@@ -682,9 +705,11 @@ namespace Binary_search_tree
         }
 
         //兄弟
-        private static void Sibling()
+        private static void Sibling(string value)
         {
-
+            string str = "";
+            Sibling_find(ref str, value);
+            form.label14.Text = str;
         }
 
         //親を見つける
@@ -773,6 +798,72 @@ namespace Binary_search_tree
                 Child_find(ref str, value, node.Left);
             else
                 Child_find(ref str, value, node.Right);
+        }
+
+        //兄弟を見つける
+        private static void Sibling_find(ref string str, string value)
+        {
+            int count = 0;
+            if (s_root.Value == value)
+            {
+                str += s_root.Value;
+                return;
+            }
+            count++;
+            if (int.Parse(value) < int.Parse(s_root.Value))
+                Sibling_find(value, s_root.Left, ref count);
+            else
+                Sibling_find(value, s_root.Right, ref count);
+
+            if (s_root.Left != null)
+                s_sibling.Add(s_root.Left);
+            if (s_root.Right != null)
+                s_sibling.Add(s_root.Right);
+            for (int i = 0; i < count; i++)
+            {
+                bool flag;
+                if (i == count - 1)
+                    flag = true;
+                else
+                    flag = false;
+                List<Node> Buf = new List<Node>(s_sibling);
+                s_sibling.Clear();
+                for (int j = 0; j < Buf.Count; j++)
+                {
+                    Sibling_str_add(ref str, Buf[j], flag , value);
+                }
+            }
+        }
+
+        private static void Sibling_find(string value, Node node, ref int count)
+        {
+            if (node.Value == value)
+                return;
+            count++;
+            if (int.Parse(value) < int.Parse(node.Value))
+                Sibling_find(value, node.Left, ref count);
+            else
+                Sibling_find(value, node.Right, ref count);  
+        }
+
+        private static void Sibling_str_add(ref string str, Node node, bool flag, string value)
+        {
+            if (flag)
+            {
+                if (node.Value == value)
+                    return;
+                if (str == "")
+                    str += node.Value;
+                else
+                    str += ", " + node.Value;
+            }
+            else
+            {
+                if (node.Left != null)
+                    s_sibling.Add(node.Left);
+                if (node.Right != null)
+                    s_sibling.Add(node.Right);
+            }
         }
     }
 }
