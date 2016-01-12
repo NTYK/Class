@@ -18,8 +18,11 @@ namespace Route_Search
             InitializeComponent();
         }
 
+        //木構造のノードはNodeクラスで表現する
         class Node
         {
+            //ノードの中に表示する値や、このノードを基準に持つ子ノード、ボタンクラス
+            //ボタンの配置に関わる座標情報をもつメンバ変数を定義する
             public string Value;
             public Node[] node = new Node[4];
             public Button button;
@@ -92,9 +95,11 @@ namespace Route_Search
             
         private void Form1_Load(object sender, EventArgs e)
         {
+            //フォームの初期化
             this.Text = "Route_Search";
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
+            //ラベルの初期化
             label1 = new Label();
             label1.Text = "このプログラムは\n迷路探索プログラムです。\n探索の様子を表す木構造と\n迷路の回答を表示します。";
             label1.Font = new Font("メイリオ", 15, FontStyle.Bold);
@@ -205,19 +210,23 @@ namespace Route_Search
             this.Controls.Add(bt9);
             bt9.Hide();
 
-            //テキストボックス
+            //テキストボックスの初期化
             tb.Location = new Point(15, 50);
             tb.Font = new Font("MS UI Gothic", 13);
             this.Controls.Add(tb);
             tb.Hide();
         }
 
+        //label1がクリックされたときに動作するイベント
+        //データの入力方法の選択方法に画面を切り替える
         private void label1_Click(object sender, EventArgs e)
         {
             if (label1.Text == "このプログラムは\n迷路探索プログラムです。\n探索の様子を表す木構造と\n迷路の回答を表示します。")
+                //データの入力選択画面に必要なコントロールの設定
                 select();
         }
 
+        //データの入力方法の選択方法に画面を切り替えるためのコントロールのプロパティ変更関数
         private void select()
         {
             //ラベルのプロパティを変更
@@ -236,6 +245,7 @@ namespace Route_Search
 
         }
 
+        //"ファイル入力"ボタンをクリックしたときに動作するイベント
         private void bt1_Click(object sender, EventArgs e)
         {
             //ラベルのプロパティを変更
@@ -256,11 +266,14 @@ namespace Route_Search
             tb.Show();            
         }
 
+        //"キーボード入力"ボタンをクリックしたときに動作するイベント
         private void bt2_Click(object sender, EventArgs e)
         {
             //ラベルのプロパティを変更
             label1.Location = new Point(15, 15);
             label1.Text = "キーボード入力";
+
+            label2.Show();
 
             //ボタンを非表示
             bt1.Hide();
@@ -276,10 +289,9 @@ namespace Route_Search
             tb.ScrollBars = ScrollBars.Both;
             tb.WordWrap = false;
             tb.Show();
-
-            label2.Show();
         }
 
+        //ファイル入力画面時に表示される"参照"ボタンをクリックしたときに動作するイベント
         private void bt3_Click(object sender, EventArgs e)
         {
             //ダイアログを表示し、読み込むファイル名を取得する
@@ -289,6 +301,7 @@ namespace Route_Search
             }
         }
 
+        //ファイル入力画面時に表示される"表示"ボタンをクリックしたときに動作するイベント
         private void bt4_Click(object sender, EventArgs e)
         {
             // データ読み込み変数
@@ -307,6 +320,7 @@ namespace Route_Search
 
                 reader.Close();
                 
+                //木構造・マップを作成し、pattern変数に結果を代入する(0の場合成功)
                 int pattern = create(result);
                 if (pattern != 0)
                 {
@@ -319,6 +333,7 @@ namespace Route_Search
                     //フォームをリサイズ
                     this.Size = new Size(300, 300);
 
+                    //失敗時の理由を表示する
                     if (pattern == 1)
                     {
                         MessageBox.Show("スタート(2)、またはゴール(3)がありません。\n確認してください",
@@ -360,11 +375,13 @@ namespace Route_Search
             }
         }
 
+        //キーボード入力画面時に表示される"表示"ボタンをクリックしたときに動作するイベント
         private void bt5_Click(object sender, EventArgs e)
         {
+            //テキストボックスに何か入力されているか
             if (tb.Text != "")
             {
-
+                //木構造・マップを作成し、pattern変数に結果を代入する(0の場合成功)
                 int pattern = create(tb.Text);
                 if (pattern != 0)
                 {
@@ -377,6 +394,7 @@ namespace Route_Search
                     //フォームをリサイズ
                     this.Size = new Size(300, 300);
 
+                    //失敗時の理由を表示する
                     if (pattern == 1)
                     {
                         MessageBox.Show("スタート(2)、またはゴール(3)がありません。\n確認してください",
@@ -418,8 +436,10 @@ namespace Route_Search
 
         }
 
+        //"戻る"ボタンをクリックしたときに 動作するイベント
         private void bt6_Click(object sender, EventArgs e)
         {
+            //データの入力選択画面に必要なコントロールの設定
             select();
 
             //コントロールを非表示
@@ -537,6 +557,7 @@ namespace Route_Search
             panel2.Controls.Add(pb4);
             pb4.Hide();
 
+            //マップの土台になるピクチャーボックスの設定
             if (width_max > 7)
             {
                 pb2.Width = 10 + 10 * width_max + 40 * width_max;
@@ -598,12 +619,12 @@ namespace Route_Search
                 }
                 while (x < width_max)
                     data[y, x++] = 0;
-
                 y++;
             }
+            //一度通っているか記録するbool配列の定義
             bool[,,] width = width = new bool[1,height_max + 1, width_max];
-            bool[,,] height = height = new bool[1,height_max, width_max + 1];         
-                        
+            bool[,,] height = height = new bool[1,height_max, width_max + 1];
+
             Pen pen = new Pen(Color.FromArgb(255, 255, 0, 0), 10);
             Queue<int> queue_x = new Queue<int>();
             Queue<int> queue_y = new Queue<int>();
@@ -611,19 +632,29 @@ namespace Route_Search
             queue_x.Enqueue(start_x);
             queue_y.Enqueue(start_y);
             Parents.Enqueue(4);
+
+            //時間計測開始
             sw.Start();
+            //深さ優先探索
             if (!depth_first_search(start_x, start_y, width, height, 0, null, ref root1, g2, pen))
                 return 2;
+            //時間計測終了
             sw.Stop();
             label3.Text = "探索時間 " + sw.Elapsed;
 
             sw = new System.Diagnostics.Stopwatch();
+
+            //一度通っているか記録するbool配列を再定義
             width = new bool[1, height_max + 1, width_max];
             height = new bool[1, height_max, width_max + 1];
             Node[] n = new Node[1];
             n[0] = null;
+
+            //時間計測開始
             sw.Start();
+            //幅優先探索
             breadth_first_search(queue_x, queue_y, width, height, width_max, height_max, 0, Parents, n, ref root2, g4, pen);
+            //時間計測終了
             sw.Stop();
             label4.Text = "探索時間 " + sw.Elapsed;
 
@@ -667,6 +698,7 @@ namespace Route_Search
             bt5.Hide();
             bt9.Hide();
 
+            //作成成功時に表示するメッセージ
             MessageBox.Show("木構造と迷路の回答を表示します",
              "成功",
              MessageBoxButtons.OK);
@@ -674,6 +706,7 @@ namespace Route_Search
             return 0;
         }
         
+        //"深さ優先探索"ボタンをクリックしたときに動作する
         private void bt7_Click(object sender, EventArgs e)
         {
             pb1.Show();
@@ -684,6 +717,7 @@ namespace Route_Search
             label4.Hide();
         }
 
+        //"幅優先探査"ボタンをクリックしたときに動作する
         private void bt8_Click(object sender, EventArgs e)
         {
             pb1.Hide();
@@ -694,8 +728,10 @@ namespace Route_Search
             label4.Show();
         }
 
+        //"データ変更"ボタンをクリックしたときに動作する
         private void bt9_Click(object sender, EventArgs e)
         {
+            //データの入力選択画面に必要なコントロールの設定
             select();
 
             //コントロールを非表示
@@ -791,6 +827,7 @@ namespace Route_Search
             return false;
         }
 
+        //木構造を表示する際にノード間をつなぐブランチを描写する関数　(深さ優先探索)
         private void d_branch_draw(Node parent, Graphics g, Pen pen)
         {
             if (parent.node[0] != null)
@@ -815,6 +852,7 @@ namespace Route_Search
             }
         }
 
+        //マップを作成する関数　(深さ優先探索)
         private void d_maze(int width, int height)
         {
             for(int i = 0; i < width; i++)
@@ -826,6 +864,7 @@ namespace Route_Search
             }
         }
 
+        //マップを作成する関数　(深さ優先探索)
         private void d_maze_create(int data, int x, int y)
         {
             Button bt = new Button();
@@ -1031,6 +1070,7 @@ namespace Route_Search
                     }
         }
 
+        //木構造を表示する際にノード間をつなぐブランチを描写する関数　(幅優先探索)
         private void b_branch_draw(Node parent, Graphics g, Pen pen)
         {
             if (parent.node[0] != null)
@@ -1055,6 +1095,7 @@ namespace Route_Search
             }
         }
 
+        //マップを作成する関数　(幅優先探索)
         private void b_maze(int width, int height)
         {
             for (int i = 0; i < width; i++)
@@ -1066,6 +1107,7 @@ namespace Route_Search
             }
         }
 
+        //マップを作成する関数　(幅優先探索)
         private void b_maze_create(int data, int x, int y)
         {
             Button bt = new Button();
@@ -1090,6 +1132,5 @@ namespace Route_Search
             if (data == 3)
                 bt.BackColor = Color.Green;
         }
-
     }
 }
